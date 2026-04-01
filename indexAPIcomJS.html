@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API de user com JS</title>
+</head>
+<style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Segoe UI', Arial, sans-serif;
+
+    /* 🌈 fundo com gradiente */
+    background: linear-gradient(135deg, #0b0909, #1a0f1f, #2a1035);
+    min-height: 100vh;
+}
+
+/* Linha separadora */
+hr {
+    width: 60%;
+    margin: 15px;
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #a855f7, transparent);
+}
+
+.m-10 {
+    margin: 10px;
+}
+
+li {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+
+h1 {
+    color: #d946ef;
+    letter-spacing: 1px;
+    
+}
+
+/* 📦 Box do título com efeito glass */
+.h1Box {
+    padding: 13px;
+    margin-bottom: 40px;
+
+  
+    backdrop-filter: blur(10px);
+
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+
+/* 🟣 Botão estiloso */
+button {
+    padding: 14px 22px;
+    margin: 15px;
+
+    color: #fff;
+    font-weight: bold;
+
+    border: none;
+    border-radius: 999px;
+
+    background: linear-gradient(135deg, #9333ea, #d946ef);
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    box-shadow: 0 5px 15px rgba(217, 70, 239, 0.4);
+}
+
+button:hover {
+    transform: translateY(-2px) scale(1.03);
+
+    background: linear-gradient(135deg, #d946ef, #9333ea);
+
+    box-shadow: 0 8px 20px rgba(217, 70, 239, 0.6);
+}
+
+/* Labels */
+.labelText {
+    font-size: 20px;
+    font-weight: 600;
+    color: #e9d5ff;
+    margin-bottom: 10px;
+}
+
+/* Inputs */
+input {
+    margin: 10px 0;
+    font-size: 16px;
+    padding: 10px 12px;
+
+    border-radius: 10px;
+    border: 1px solid transparent;
+
+    outline: none;
+
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+
+    transition: 0.3s;
+}
+
+input::placeholder {
+    color: #ccc;
+}
+
+input:focus {
+    border: 1px solid #d946ef;
+    box-shadow: 0 0 8px rgba(217, 70, 239, 0.6);
+}
+
+/* 📋 Lista */
+.ulBox {
+    border: 1px solid rgba(217, 70, 239, 0.4);
+    border-radius: 16px;
+    padding: 20px;
+
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* Item da lista */
+.ulBox li {
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.03);
+    transition: 0.2s;
+}
+
+.ulBox li:hover {
+    background: rgba(217, 70, 239, 0.1);
+    transform: scale(1.02);
+}
+.formBox{
+    margin: 45px;
+}
+.link{
+    color: white;
+    text-decoration: none;
+}
+</style>
+<body>
+    <div class="m-10" style="width: 100%;">
+        <div class="h1Box">
+            <h1>API de Users | GitHub </h1>
+        </div>
+        <div class="formBox">
+            <label for="" class="labelText">Nome de Usuário</label><br>
+            <input type="text" id="user" placeholder="Digite o usuário"><br><br>
+            <br>
+            <button onclick="getApi()">Buscar</button>
+        </div>
+    </div>
+    
+    <div class="ulBox">
+        <ul class="m-10">
+        </ul>
+    </div>
+    <script>
+        function getApi(){
+            const ul = document.querySelector('ul')
+            ul.innerHTML = ''
+
+            const user = document.querySelector('#user').value
+
+            fetch(`https://api.github.com/users/${user}/repos`).then(async res =>{
+                    // começo da conversão da res em JSON
+                    let data = await res.json()
+                    data.map( item => {
+                        let p = document.createElement('p')
+                        let li = document.createElement('li')
+                        li.classList.add('m-10')
+                        let hr = document.createElement('hr')
+
+                        li.innerHTML = `<strong style='color: white;'><a class="link" href='${item.html_url}' target='_blank''> ${item.name} </a> </strong>`
+                        ul.appendChild(li)
+                        p.innerHTML = `<p style='color: white; padding: 16px;'> ${item.description} </p>`
+                        ul.appendChild(hr)                        
+                        ul.appendChild(p)                        
+                    })
+                })
+                .catch(e =>{
+                    console.log(e);
+                })
+        }
+    </script>
+</body>
+</html>
